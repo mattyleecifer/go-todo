@@ -36,6 +36,7 @@ func main() {
 	}
 }
 
+//this doesn't work yet
 func changeOrder(list []string) []string {
 	var input []int
 	fmt.Println("What numbers do you want to swap? (separate with space")
