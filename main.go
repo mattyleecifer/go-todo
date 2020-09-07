@@ -5,6 +5,8 @@ import (
 	"encoding/csv"
 	"fmt"
 	"os"
+	"strconv"
+	"strings"
 )
 
 func main() {
@@ -14,7 +16,7 @@ func main() {
 	var option int
 	for {
 		printList(list)
-		fmt.Println("1. New item | 2. Edit item | 3. Remove item | 4. Edit item order | 5. Save & Exit")
+		fmt.Println("1. New item | 2. Edit item | 3. Remove item | 4. Edit item order | 5. Save & Exit | 6. Save")
 		fmt.Scan(&option)
 		switch {
 		case option == 1:
@@ -29,22 +31,32 @@ func main() {
 			writeData(list)
 			fmt.Println("Saved")
 			return
+		case option == 6:
+			writeData(list)
+			fmt.Println("Saved")
 		default:
-			fmt.Println("Please enter a valid option (1-5)")
+			fmt.Println("Please enter a valid option (1-6)")
 		}
 
 	}
 }
 
-//this doesn't work yet
 func changeOrder(list []string) []string {
-	var input []int
-	fmt.Println("What numbers do you want to swap? (separate with space")
+	var input string
+	fmt.Println("What numbers do you want to swap? (separate with comma")
 	printList(list)
 	fmt.Scanln(&input)
-	if len(input) > 1 {
-		list[input[0]], list[input[1]] = list[input[1]], list[input[0]]
+	sl := strings.Split(input, ",")
+	var c []int
+	for _, i := range sl {
+		j, err := strconv.Atoi(i)
+		if err != nil {
+			fmt.Println("Invalid input")
+			return list
+		}
+		c = append(c, j)
 	}
+	list[c[0]], list[c[1]] = list[c[1]], list[c[0]]
 	return list
 }
 
@@ -96,9 +108,11 @@ func newItem(list []string) []string {
 }
 
 func printList(list []string) {
+	fmt.Println("")
 	for num, item := range list {
 		fmt.Println(num, ". ", item)
 	}
+	fmt.Println("")
 }
 
 func readData(filename string) []string {
