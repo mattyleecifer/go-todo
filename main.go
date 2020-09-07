@@ -4,7 +4,9 @@ import (
 	"bufio"
 	"encoding/csv"
 	"fmt"
+	"log"
 	"os"
+	"os/user"
 	"strconv"
 	"strings"
 )
@@ -12,7 +14,12 @@ import (
 func main() {
 	// for loop that just displays the list/options
 	// list, add, remove, edit, list is numbered
-	list := readData("todo.txt")
+	user, err := user.Current()
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+	homeDirectory := user.HomeDir
+	list := readData(homeDirectory + "/todo.txt")
 	var option int
 	for {
 		printList(list)
