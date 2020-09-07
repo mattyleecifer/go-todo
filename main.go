@@ -29,6 +29,8 @@ func main() {
 			writeData(list)
 			fmt.Println("Saved")
 			return
+		default:
+			fmt.Println("Please enter a valid option (1-5)")
 		}
 
 	}
@@ -62,6 +64,10 @@ func editItem(list []string) []string {
 	fmt.Println("What item do you want to edit?")
 	printList(list)
 	fmt.Scan(&input)
+	if input > len(list) {
+		fmt.Println("Invalid selection!")
+		return list
+	}
 	fmt.Println("What do you want to change it to? (blank to cancel)")
 	scanner := bufio.NewScanner(os.Stdin)
 	if scanner.Scan() {
