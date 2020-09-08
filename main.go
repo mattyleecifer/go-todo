@@ -168,3 +168,15 @@ func writeData(filename string, data []string) {
 	defer file.Close()
 
 	writer := csv.NewWriter(file)
+	defer writer.Flush()
+	var fix [][]string
+	for _, val := range data {
+		fix = append(fix, []string{val})
+	}
+
+	err = writer.WriteAll(fix)
+	if err != nil {
+		fmt.Println("Error writing to file!")
+	}
+
+}
