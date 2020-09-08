@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"os/user"
 	"strconv"
 	"strings"
@@ -18,10 +19,14 @@ func main() {
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-	homeDirectory := user.HomeDir
-	list := readData(homeDirectory + "/todo.txt")
+	tp := user.HomeDir + "/todo.txt"
+
+	list := readData(tp)
 	var option int
 	for {
+		c := exec.Command("clear")
+		c.Stdout = os.Stdout
+		c.Run()
 		printList(list)
 		fmt.Println("1. New item | 2. Edit item | 3. Remove item | 4. Edit item order | 5. Save & Exit | 6. Save")
 		fmt.Scan(&option)
@@ -35,11 +40,11 @@ func main() {
 		case option == 4:
 			list = changeOrder(list)
 		case option == 5:
-			writeData(list)
+			writeData(tp, list)
 			fmt.Println("Saved")
 			return
 		case option == 6:
-			writeData(list)
+			writeData(tp, list)
 			fmt.Println("Saved")
 		default:
 			fmt.Println("Please enter a valid option (1-6)")
@@ -63,7 +68,14 @@ func changeOrder(list []string) []string {
 		}
 		c = append(c, j)
 	}
+
 	list[c[0]], list[c[1]] = list[c[1]], list[c[0]]
+
+	// code to insert instead of swap
+	// val := list[c[0]]
+	// list = append(list[:c[1]+1], list[c[1]:]...)
+	// list[c[1]] = val
+
 	return list
 }
 
@@ -148,23 +160,11 @@ func readData(filename string) []string {
 	return lfix
 }
 
-func writeData(data []string) {
-	file, err := os.Create("todo.txt")
+func writeData(filename string, data []string) {
+	file, err := os.Create(filename)
 	if err != nil {
 		fmt.Println("Error creating file!")
 	}
 	defer file.Close()
 
 	writer := csv.NewWriter(file)
-	defer writer.Flush()
-	var fix [][]string
-	for _, val := range data {
-		fix = append(fix, []string{val})
-	}
-
-	err = writer.WriteAll(fix)
-	if err != nil {
-		fmt.Println("Error writing to file!")
-	}
-
-}
