@@ -28,28 +28,23 @@ func main() {
 		c.Stdout = os.Stdout
 		c.Run()
 		printList(list)
-		fmt.Println("1. New item | 2. Edit item | 3. Remove item | 4. Edit item order | 5. Save & Exit | 6. Save")
+		fmt.Println("1. New item | 2. Remove item | 3. Edit item | 4. Edit item order | 5. Exit")
 		fmt.Scan(&option)
 		switch {
 		case option == 1:
 			list = newItem(list)
-		case option == 2:
-			list = editItem(list)
 		case option == 3:
+			list = editItem(list)
+		case option == 2:
 			list = removeItem(list)
 		case option == 4:
 			list = changeOrder(list)
 		case option == 5:
-			writeData(tp, list)
-			fmt.Println("Saved")
 			return
-		case option == 6:
-			writeData(tp, list)
-			fmt.Println("Saved")
 		default:
 			fmt.Println("Please enter a valid option (1-6)")
 		}
-
+		writeData(tp, list)
 	}
 }
 
